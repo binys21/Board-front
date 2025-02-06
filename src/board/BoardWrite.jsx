@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function BoardWrite() {
   const [title, setTitle] = useState("");
@@ -20,12 +21,36 @@ export default function BoardWrite() {
     }
     setFiles([...files]);
   };
+
+  //폼데이터 서버로 전송
+  const formData = new FormData();
+  const data = { title, contents };
+
+  formData.append("board", JSON.stringify(data));
+
+  Object.values(files).forEach((file) => formData.append("files", file));
+
+  const navigate = useNavigate;
+
+  const handlerSubmit = (e) => {
+    e.preventDefault();
+    axios({
+      method: "POST",
+      url: "http://localhost:8080/api/board",
+      data: formData,
+      headers: { "Content-Type": multipart / form - data },
+    })
+      .then((res) => res && res.status === 200 && navigate("/list"))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <div className="container">
         <h2>게시판 등록</h2>
         <form
           id="frm"
+          onSubmit={handlerSubmit}
           method="post"
           action="/board/insertBoard.do"
           enctype="multipart/form-data"

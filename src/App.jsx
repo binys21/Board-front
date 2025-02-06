@@ -12,6 +12,7 @@ import BoardWrite from "./board/BoardWrite";
 const Layout = () => (
   <>
     <nav>
+      <Link to="/">로그인</Link>
       <Link to="/list">게시판 목록</Link>:
       <Link to="/detail/8">게시판 상세</Link>:
       <Link to="/write">게시판 글쓰기</Link>
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
+      { path: "", element: <Login /> },
       { path: "", element: <BoardList /> },
       { path: "list", element: <BoardList /> },
       { path: "detail/:boardIdx", element: <BoardDetail /> },

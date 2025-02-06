@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -6,6 +7,8 @@ export default function Login() {
 
   const changeUsername = (e) => setUsername(e.target.value);
   const changePassword = (e) => setPassword(e.target.value);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,7 +19,12 @@ export default function Login() {
       data: { username, password },
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res.headers.token);
+        //JWT토큰을 세션 스토리지에 저장
+        sessionStorage.setItem("token", res.headers.token);
+        navigate("/list");
+      })
       .catch((err) => console.log(err));
   };
   return (

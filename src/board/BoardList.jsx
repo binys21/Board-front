@@ -6,8 +6,14 @@ export default function BoardList() {
   const [datas, setDatas] = useState([]);
 
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
     axios
-      .get("http://localhost:8080/api/board")
+      .get("http://localhost:8080/api/board", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         console.log(res);
         res && res.data && setDatas(res.data);

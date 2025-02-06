@@ -1,4 +1,25 @@
+import { useState } from "react";
+
 export default function BoardWrite() {
+  const [title, setTitle] = useState("");
+  const [contents, setContents] = useState("");
+
+  const chagneTitle = (e) => setTitle(e.target.value);
+  const changeContents = (e) => setContents(e.target.value);
+
+  const refFiles = useRef();
+
+  const [files, setFiles] = useState([]);
+  const changeFiles = (e) => {
+    const files = e.target.files;
+    if (files.length > 3) {
+      alert("이미지는 최대 3개까지만 업로드 가능합니다.");
+      refFiles.current.value = "";
+      setFiles([]);
+      return;
+    }
+    setFiles([...files]);
+  };
   return (
     <>
       <div className="container">
@@ -14,17 +35,35 @@ export default function BoardWrite() {
               <tr>
                 <td>제목</td>
                 <td>
-                  <input type="text" id="title" name="title" />
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value={title}
+                    onChange={chagneTitle}
+                  />
                 </td>
               </tr>
               <tr>
                 <td colSpan="2">
-                  <textarea id="contents" name="contents"></textarea>
+                  <textarea
+                    id="contents"
+                    name="contents"
+                    value={contents}
+                    onChange={changeContents}
+                  ></textarea>
                 </td>
               </tr>
             </tbody>
           </table>
-          <input type="file" id="files" name="files" multiple="multiple" />
+          <input
+            ref={refFiles}
+            onChange={changeFiles}
+            type="file"
+            id="files"
+            name="files"
+            multiple="multiple"
+          />
           <input type="submit" id="submit" value="저장" className="btn" />
         </form>
       </div>

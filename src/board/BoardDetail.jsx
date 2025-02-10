@@ -25,6 +25,61 @@ export default function BoardDetail() {
       });
   }, []);
 
+  const listButtonClick = (e) => {
+    e.preventDefault();
+    navigate("/list");
+  };
+
+  const updateButtonClick = (e) => {
+    e.preventDefault();
+    const token = sessionStorage.getItem("token");
+    axios
+      .put(
+        `http://localhost:8080/api/v2/board/${boardIdx}`,
+        { title, contents },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((res) => {
+        console.log(res);
+        res && res.status === 200 && navigate("/list");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deleteButtonClick = (e) => {
+    e.preventDefault();
+    const token = sessionStorage.getItem("token");
+    axios
+      .delete(`http://localhost:8080/api/v2/board/${boardIdx}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => res && res.status === 200 && navigate("/list"))
+      .catch((err) => console.log(err));
+  };
+
+  const fileDownload = (e, file) => {
+    e.preventDefault();
+
+    const { boardIdx, idx, originalFileName } = file;
+
+    axios({
+      url: `http://localhost:8080/api/board/file?boardIdx=${boardIdx}&idx=${idx}`,
+      method: "GET",
+      responseType: "blob",
+    }).then((res) => {
+      const href = URL.createObjectURL(res.data);
+
+      const link = document.createElement("a");
+      link.href = href;
+      link.setAttribute("download", originalFileName);
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    });
+  };
+
   return (
     <>
       <div className="container">

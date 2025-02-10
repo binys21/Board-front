@@ -3,23 +3,41 @@ import {
   Outlet,
   RouterProvider,
   Link,
+  useNavigate,
 } from "react-router-dom";
 import "./App.css";
 import BoardList from "./board/BoardList";
 import BoardDetail from "./board/BoardDetail";
 import BoardWrite from "./board/BoardWrite";
 
-const Layout = () => (
-  <>
-    <nav>
-      <Link to="/">로그인</Link>
-      <Link to="/list">게시판 목록</Link>:
-      <Link to="/detail/8">게시판 상세</Link>:
-      <Link to="/write">게시판 글쓰기</Link>
-    </nav>
-    <Outlet />
-  </>
-);
+const Layout = () => {
+  const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
+  let decoded = "";
+  if (token) {
+    const decoded = jwtDecode(token);
+    console.log(decoded.name);
+  } else {
+    navigate("/");
+  }
+  const doLogout = (e) => {
+    e.preventDefault();
+    sessionStorage.removeItem("token");
+    navigate("/");
+  };
+  return (
+    <>
+      <nav>
+        {token && (
+          <>
+            "{decoded.name}"님 반갑습니다. [<a onClick={doLogout}>로그아웃</a>]
+          </>
+        )}
+      </nav>
+      <Outlet />
+    </>
+  );
+};
 
 const router = createBrowserRouter([
   {

@@ -38,7 +38,10 @@ export default function BoardWrite() {
       method: "POST",
       url: "http://localhost:8080/api/board",
       data: formData,
-      headers: { "Content-Type": multipart / form - data },
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => res && res.status === 200 && navigate("/list"))
       .catch((err) => console.log(err));

@@ -17,12 +17,12 @@ export default function Login() {
       method: "POST",
       url: "http://localhost:8080/loginProc",
       data: { username, password },
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { "Content-Type": "application/json" },
     })
       .then((res) => {
-        console.log(res.headers.token);
+        console.log(res.data);
         //JWT토큰을 세션 스토리지에 저장
-        sessionStorage.setItem("token", res.headers.token);
+        sessionStorage.setItem("token", res.data);
         navigate("/list");
       })
       .catch((err) => console.log(err));

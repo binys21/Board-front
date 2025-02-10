@@ -18,7 +18,14 @@ export default function BoardList() {
         console.log(res);
         res && res.data && setDatas(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        if (err.status === 401) {
+          alert("[인증 토큰 누락] 로그인 후 다시 시도해주세요.");
+        } else if (err.status === 403) {
+          alert("[인증 토큰 오류] 로그인 후 다시 시도해주세요");
+        }
+      });
   }, []);
 
   return (
@@ -43,7 +50,7 @@ export default function BoardList() {
           <tbody>
             {datas.length > 0 &&
               datas.map((board) => (
-                <tr>
+                <tr key={board.boardIdx}>
                   <td>{board.boardIdx}</td>
                   <td className="title">
                     <Link to={`/detail/${board.boardIdx}`}>{board.title}</Link>

@@ -1,17 +1,28 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function BoardDetail() {
   const [board, setBoard] = useState({});
 
   const { boardIdx } = useParams();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
     axios
-      .get(`http://localhost:8080/api/board/${boardIdx}`)
+      .get(`http://localhost:8080/api/v2/board/${boardIdx}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => res && res.data && setBoard(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        if (err.status === 403 || err.status === 401) {
+          alert("[인증 토큰 누락]");
+          navigate("/");
+        }
+      });
   }, []);
 
   return (
